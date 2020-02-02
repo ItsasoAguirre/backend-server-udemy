@@ -87,7 +87,7 @@ app.post('/google', async(req, res) => {
 
                 res.status(200).json({
                     ok: true,
-                    usuario: usuarioBD,
+                    usuario: usuarioDB,
                     token: token,
                     id: usuarioDB.id
                 })
@@ -122,7 +122,7 @@ app.post('/', (req, res) => {
 
     var body = req.body;
 
-    Usuario.findOne({ email: body.email }, (err, usuarioBD) => {
+    Usuario.findOne({ email: body.email }, (err, usuarioDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -133,7 +133,7 @@ app.post('/', (req, res) => {
 
         // Evaluar si existe ese ususario
 
-        if (!usuarioBD) {
+        if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
                 // TODO: quitar -email, es solo para comprbar que falla en desarrollo
@@ -143,7 +143,7 @@ app.post('/', (req, res) => {
         }
 
         //Validamos que la contraseña sea correcta
-        if (!bcrypt.compareSync(body.password, usuarioBD.password)) {
+        if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
             return res.status(400).json({
                 ok: false,
                 mensaje: 'Credenciales incorrectas - password',
@@ -152,15 +152,15 @@ app.post('/', (req, res) => {
         }
 
         //Crear un token
-        usuarioBD.password = ':)';
+        usuarioDB.password = ':)';
 
-        var token = generarToken(usuarioBD);
+        var token = generarToken(usuarioDB);
 
         res.status(200).json({
             ok: true,
-            usuario: usuarioBD,
+            usuario: usuarioDB,
             token: token,
-            id: usuarioBD.id
+            id: usuarioDB.id
         })
 
     });
